@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -45,12 +46,13 @@ public class TopicosController {
 	@GetMapping					
 	public Page<TopicoDto> lista(
 			@RequestParam(required = false) String nomeCurso,
-			@RequestParam int pagina,
-			@RequestParam int qtdElementos,
-			@RequestParam String ordenacao) {
-
-		Pageable paginacao = PageRequest.of(pagina, qtdElementos, Direction.ASC, ordenacao);
+			@PageableDefault(
+					sort = "id", 
+					direction = Direction.DESC,
+					page = 0,
+					size = 10) Pageable paginacao) {
 		
+		//os parametros na requisição são page, size e sort(sort pode ser repetido)
 		if (nomeCurso == null) {
 			//troca de List para Page
 			Page<Topico> topicos = topicoRepository.findAll(paginacao);
@@ -61,7 +63,7 @@ public class TopicosController {
 		}
 	}
 
-	@PostMapping // RequestBody é pra pegar do corpo da requisição
+	@PostMapping //RequestBody é pra pegar do corpo da requisição
 	public ResponseEntity<TopicoDto> cadastrar(@RequestBody @Valid TopicoForm form, UriComponentsBuilder uriBuilder) {
 		Topico topico = form.converter(cursoRepository);
 		topicoRepository.save(topico);
