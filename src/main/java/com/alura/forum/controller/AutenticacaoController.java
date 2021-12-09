@@ -1,6 +1,5 @@
 package com.alura.forum.controller;
 
-import javax.naming.AuthenticationException;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,13 +30,10 @@ public class AutenticacaoController {
 	public ResponseEntity<TokenDto> autenticar(@RequestBody @Valid LoginForm form){
 
 		UsernamePasswordAuthenticationToken dadosLogin = form.converter();
-		
-		
-		
+
 		try {
 			Authentication authentication = authManager.authenticate(dadosLogin);
 			String token = tokenService.gerarToken(authentication);
-			
 			return ResponseEntity.ok(new TokenDto(token, "Bearer"));
 		} catch (org.springframework.security.core.AuthenticationException e) {
 			return ResponseEntity.badRequest().build();
