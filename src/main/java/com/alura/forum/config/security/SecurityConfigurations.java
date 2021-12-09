@@ -51,6 +51,8 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter{
 			//para liberar outras, continua com antMatchers
 			.antMatchers(HttpMethod.GET, "/topicos/*").permitAll()
 			.antMatchers(HttpMethod.POST, "/auth").permitAll()
+			.antMatchers(HttpMethod.GET, "/actuator").permitAll()
+			.antMatchers(HttpMethod.GET, "/actuator/*").permitAll()
 			.anyRequest().authenticated() //acesso aos outros endpoints só se tiver autenticado
 //			.and().formLogin(); //gera formulario padrão de login
 			.and().csrf().disable()
