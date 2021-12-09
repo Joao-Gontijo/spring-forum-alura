@@ -24,7 +24,6 @@ public class TokenService {
 		
 		Usuario logado = (Usuario) authentication.getPrincipal(); //retorna o usuário logado
 		Date hoje = new Date();
-		@SuppressWarnings("deprecation")
 		Date dataExpiracao = new Date(hoje.getTime() + Long.parseLong(expiration));
 		
 		return Jwts.builder()
@@ -34,6 +33,15 @@ public class TokenService {
 				.setExpiration(dataExpiracao) //tempo que o token vai durar
 				.signWith(SignatureAlgorithm.HS256, secret)
 				.compact();
+	}
+
+	public boolean isTokenValido(String token) {
+		try {
+			Jwts.parser().setSigningKey(this.secret).parseClaimsJws(token);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	
